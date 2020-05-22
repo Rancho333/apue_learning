@@ -1,11 +1,16 @@
 #include "../apue.h"
 #include <sys/wait.h>
 
+static void sig_init(int);          /* our signal-catching function*/
+
 int main(void)
 {
     char buf[MAXLINE];
     pid_t pid;
     int status;
+
+    if (signal(SIGINT, sig_init) == SIG_ERR)
+        err_sys("signal error");
 
     printf("%% ");
     while (fgets(buf, MAXLINE, stdin) != NULL){
@@ -29,4 +34,9 @@ int main(void)
         printf("%% ");
     }
     return 0;
+}
+
+void sig_init(int signo)
+{
+    printf("interrupt\n%%");
 }
